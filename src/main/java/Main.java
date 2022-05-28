@@ -11,15 +11,13 @@ import com.opencsv.exceptions.CsvException;
 
 public class Main {
     private static final String fonte = "C:/Users/rique/Downloads/ExercicioTecnico_DellAcademy/src/TA_PRECO_MEDICAMENTO.csv";
-    private static final Scanner teclado = new Scanner(System.in);
+    //private static final Scanner input = new Scanner(System.in);
     private static final ArrayList<Medicamento> medicamentos = new ArrayList<>();
-    public static void main(String[] args) throws FileNotFoundException {// INICIO DO PROGRAMA
-        load(fonte);
-        //interfaceSistema();
-        //System.out.println(medicamentos.get(0));
+    public static void main(String[] args) throws FileNotFoundException {//Execucao
+        readStore(fonte);
     }
 
-    public static void load(String fonte)throws FileNotFoundException  { // carrega o arquivo .csv
+    public static void readStore(String fonte)throws FileNotFoundException  { //Le o arquivo csv e guarda as colunas no objeto Medicamento
 
         BufferedReader br = null;
         try {
@@ -30,8 +28,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        String linha;
-        String[] linhaLst;
+        String[] linha;
 
         Medicamento m;
 
@@ -40,115 +37,57 @@ public class Main {
         try (CSVReader reader = new CSVReader(br)) {
             r = reader.readAll();
             for (String[] arrays : r){
-                linhaLst = Arrays.toString(arrays).split(";");
-                System.out.println("_____________________________");
-                System.out.println("problema: "+linhaLst[8]);
-                System.out.println("_____________________________");
-                m = new Medicamento(  linhaLst[0],
-                        linhaLst[1],
-                        linhaLst[2],
-                        linhaLst[3],
-                        linhaLst[4],
-                        linhaLst[5],
-                        linhaLst[6],
-                        linhaLst[7],
-                        linhaLst[8],
-                        linhaLst[9],
-                        linhaLst[10],
-                        linhaLst[11],
-                        linhaLst[12],
-                        linhaLst[13],
-                        linhaLst[14],
-                        linhaLst[15],
-                        linhaLst[16],
-                        linhaLst[17],
-                        linhaLst[18],
-                        linhaLst[19],
-                        linhaLst[20],
-                        linhaLst[21],
-                        linhaLst[22],
-                        linhaLst[23],
-                        linhaLst[24],
-                        linhaLst[25],
-                        linhaLst[26],
-                        linhaLst[27],
-                        linhaLst[28],
-                        linhaLst[29],
-                        linhaLst[30],
-                        linhaLst[31],
-                        linhaLst[32],
-                        linhaLst[33],
-                        linhaLst[34],
-                        linhaLst[35],
-                        linhaLst[36],
-                        linhaLst[37],
-                        linhaLst[38],
-                        linhaLst[39]);
-                System.out.println(m);
-
+                linha = Arrays.toString(arrays).split(";");
+                m = new Medicamento(  linha[0],
+                        linha[1],
+                        linha[2],
+                        linha[3],
+                        linha[4],
+                        linha[5],
+                        linha[6],
+                        linha[7],
+                        linha[8],
+                        linha[9],
+                        linha[10],
+                        linha[11],
+                        linha[12],
+                        linha[13],
+                        linha[14],
+                        linha[15],
+                        linha[16],
+                        linha[17],
+                        linha[18],
+                        linha[19],
+                        linha[20],
+                        linha[21],
+                        linha[22],
+                        linha[23],
+                        linha[24],
+                        linha[25],
+                        linha[26],
+                        linha[27],
+                        linha[28],
+                        linha[29],
+                        linha[30],
+                        linha[31],
+                        linha[32],
+                        linha[33],
+                        linha[34],
+                        linha[35],
+                        linha[36],
+                        linha[37],
+                        linha[38],
+                        linha[39]);
+                
                 medicamentos.add(m);
-                break;
+                
             }
 
         }catch (NumberFormatException | IOException | CsvException e) {
             e.printStackTrace();
         }
 
-        System.out.println(medicamentos.size() + " carregados...");// uma resposta visual para o usuario, para dizer que o load funcionou
+        System.out.println(medicamentos.size()-1 + " medicamentos carregados");
     }
-
-    /**
-    private static void interfaceSistema() {// onde o usuario interage com o sistema
-        int escolha;
-        System.out.println("Seja bem-vindo ao sistema de bolsistas de Porto Alegre");
-        boolean loop = true;
-        Busca local = new Busca();
-        while(loop) {// um loop infinito (inicialmente) que recebe o input do usuario
-            System.out.println("Por favor selecione um servico: \n");
-            System.out.println("1- Consultar bolsa zero/Ano");
-            System.out.println("2- Conferir dados de bolsista");
-            System.out.println("3- Consultar média anual");
-            System.out.println("4- Ranking valores de bolsa");
-            System.out.println("0- Terminar o programa\n");
-            escolha = teclado.nextInt();
-            switch (escolha) {
-                case 1: {//[Consultar bolsa zero/Ano]
-                    System.out.println("Por favor, Insira um ano:");
-                    int ano =  teclado.nextInt();
-                    if(!anos.contains(ano)) {
-                        System.out.println("Ano inserido nao existente no arquivo, tente inserir outro ano");
-                    }
-                    local.buscaBolsistaZero(bolsistas,ano);
-                }break;
-                case 2: {//[Codificar nomes]
-                    teclado.nextLine();
-                    String nome;
-                    System.out.println("Por favor, insira um nome: ");
-                    nome = teclado.nextLine().toUpperCase();
-                    local.buscaBolsista(bolsistas,nome);
-                }break;
-                case 3: {//[Consultar média anual]
-                    System.out.println("Por favor, Insira um ano:");
-                    int ano = teclado.nextInt();
-                    if(!anos.contains(ano)) {
-                        System.out.println("Ano inserido nao existente no arquivo, tente inserir outro ano");
-                    }
-                    local.buscaMediaValoresAno(bolsistas,ano);
-                }break;
-                case 4: {//[Ranking valores de bolsa]
-                    local.buscaRank(bolsistas);
-                }break;
-                case 0: {//[Terminar o programa]
-                    System.out.println("Obrigado");
-                    loop = false;
-                }break;
-                default: {
-                    System.out.println("Input invalido, tente novamente");
-                }
-            }
-        }
-        teclado.close();
-    }*/
-
-
+    
 }
