@@ -83,6 +83,166 @@ public class Medicamento {
         this.tarja = tarja;
     }
 
+    public String getSubstancia() {
+        return substancia;
+    }
+
+    public String getCNPJ() {
+        return CNPJ;
+    }
+
+    public String getLaboratorio() {
+        return laboratorio;
+    }
+
+    public String getCodigoGGREM() {
+        return codigoGGREM;
+    }
+
+    public String getRegistro() {
+        return registro;
+    }
+
+    public String getEan1() {
+        return ean1;
+    }
+
+    public String getEan2() {
+        return ean2;
+    }
+
+    public String getEan3() {
+        return ean3;
+    }
+
+    public String getProduto() {
+        return produto;
+    }
+
+    public String getApresentacao() {
+        return apresentacao;
+    }
+
+    public String getClasseTerapeutica() {
+        return classeTerapeutica;
+    }
+
+    public String getTipoDeProduto() {
+        return tipoDeProduto;
+    }
+
+    public String getRegimeDePreco() {
+        return regimeDePreco;
+    }
+
+    public String getPfSemImpostos() {
+        return pfSemImpostos;
+    }
+
+    public String getPf0() {
+        return pf0;
+    }
+
+    public String getPf12() {
+        return pf12;
+    }
+
+    public String getPf17() {
+        return pf17;
+    }
+
+    public String getPf17Alc() {
+        return pf17Alc;
+    }
+
+    public String getPf175() {
+        return pf175;
+    }
+
+    public String getPf175Alc() {
+        return pf175Alc;
+    }
+
+    public String getPf18() {
+        return pf18;
+    }
+
+    public String getPf18Alc() {
+        return pf18Alc;
+    }
+
+    public String getPf20() {
+        return pf20;
+    }
+
+    public String getPmc0() {
+        return pmc0;
+    }
+
+    public String getPmc12() {
+        return pmc12;
+    }
+
+    public String getPmc17() {
+        return pmc17;
+    }
+
+    public String getPmc17Alc() {
+        return pmc17Alc;
+    }
+
+    public String getPmc175() {
+        return pmc175;
+    }
+
+    public String getPmc175Alc() {
+        return pmc175Alc;
+    }
+
+    public String getPmc18() {
+        return pmc18;
+    }
+
+    public String getPmc18Alc() {
+        return pmc18Alc;
+    }
+
+    public String getPmc20() {
+        return pmc20;
+    }
+
+    public String getRestricaoHospitalar() {
+        return restricaoHospitalar;
+    }
+
+    public String getCAP() {
+        return CAP;
+    }
+
+    public String getConfaz87() {
+        return confaz87;
+    }
+
+    public String getIcms0() {
+        return icms0;
+    }
+
+    public String getAnaliseRecursal() {
+        return analiseRecursal;
+    }
+
+    public String getListaDeConcessaoDeCreditoTributario() {
+        return listaDeConcessaoDeCreditoTributario;
+    }
+
+    public String getComercializacao2020() {
+        return comercializacao2020;
+    }
+
+    public String getTarja() {
+        return tarja;
+    }
+
     @Override
     public String toString() {
         return "Medicamento:" +
@@ -123,7 +283,7 @@ public class Medicamento {
                 "\n confaz87='" + confaz87 + '\'' +
                 "\n icms0='" + icms0 + '\'' +
                 "\n analiseRecursal=" + analiseRecursal +
-                "\n listaDeConcessãoDeCreditoTributario='" + listaDeConcessaoDeCreditoTributario + '\'' +
+                "\n listaDeConcessaoDeCreditoTributario='" + listaDeConcessaoDeCreditoTributario + '\'' +
                 "\n comercializacao2020='" + comercializacao2020 + '\'' +
                 "\n tarja='" + tarja + '\'' +
                "\n\n"
