@@ -1,4 +1,4 @@
-public class Medicamento {
+public class Medicamento { //Objeto que representa cada linha do arquivo csv como um medicamento
     private final String substancia;
     private final String CNPJ;
     private final String laboratorio;
