@@ -9,24 +9,27 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 
 public class Main {
-    private static final String fonte = "src/main/resources/TA_PRECO_MEDICAMENTO.csv";
-    //private static final Scanner input = new Scanner(System.in);
+    private static final String path = "src/main/resources/TA_PRECO_MEDICAMENTO.csv";
+    private static final Scanner input = new Scanner(System.in);
     private static final ArrayList<Medicamento> medicamentos = new ArrayList<>();
+    private static final ArrayList<String> nomesDeProdutos = new ArrayList<>();
+    private static final ArrayList<String> codigosDeBarra = new ArrayList<>();
     public static void main(String[] args) throws FileNotFoundException {//Execucao
-        readStore(fonte);
-        Funcionalidades app = new Funcionalidades();
-        app.consultarPeloNome(medicamentos, "HYZAAR");
-        app.buscarCodigoDeBarras(medicamentos,"7897337706506");
-        app.comparativoConcessao(medicamentos);
+        readStore(path);
+        sistema();
+        //Funcionalidades app = new Funcionalidades();
+        //app.consultarPeloNome(medicamentos, "CHARMELIE");
+        //app.buscarCodigoDeBarras(medicamentos,"7897337706506");
+        //app.comparativoConcessao(medicamentos);
     }
     
-    public static void readStore(String fonte)throws FileNotFoundException  { //Le o csv e guarda as colunas como objeto Medicamento
+    public static void readStore(String path)throws FileNotFoundException  { //Le o csv e guarda as colunas como objeto Medicamento
 
         BufferedReader br = null;
         try {
             br = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(fonte), "ISO-8859-1"));
+                            new FileInputStream(path), "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -88,12 +91,62 @@ public class Main {
                         linha[39]);
 
                 medicamentos.add(m);
+                nomesDeProdutos.add(linha[8]);
+                codigosDeBarra.add(linha[5]);codigosDeBarra.add(linha[6]);codigosDeBarra.add(linha[7]);
             }
 
         }catch (NumberFormatException | IOException | CsvException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void sistema() { //Parte visual do sistema, acesso direto do usuário
+        String escolha;
+        boolean rodando = true;
+        Funcionalidades app = new Funcionalidades();
+        System.out.println("Sistema de dados de medicamentos do Brasil");
+        while(rodando) {//Mantemos o programa rodando enquanto foi desejado
+            System.out.println("\nSelecione uma funcionalidade: \n");
+            System.out.println("[1] Consultar medicamento pelo nome do produto");
+            System.out.println("[2] Buscar produtos pelo código de barras");
+            System.out.println("[3] Comparativo de lista de concessão");
+            System.out.println("[0] Encerrar serviço\n");
+            escolha = input.next();
+            switch (escolha) {
+                case "1": {//Consultar pelo nome do produto
+                    input.nextLine();
+                    String nome;
+                    System.out.println("\nInsira o nome do medicamento: ");
+                    nome =  input.nextLine();
+                    if(!nomesDeProdutos.contains(nome.toUpperCase())) {
+                        System.out.println("O nome inserido  está incompleto ou não consta no banco de dados, tente novamente.");
+                    }
+                    app.consultarPeloNome(medicamentos,nome);
+                }break;
+                case "2": {//Buscar informações do produto pelo código de barras
+                    input.nextLine();
+                    String cod;
+                    System.out.println("\nDigite o código de barras: ");
+                    cod = input.nextLine();
+                    if (!codigosDeBarra.contains(cod)){
+                        System.out.println("Código de barras não encontrado, tente novamente");
+                    }
+                    app.buscarCodigoDeBarras(medicamentos,cod);
+                }break;
+                case "3": {//Tabela de análise da lista de concessão
+                    app.comparativoConcessao(medicamentos);
+                }break;
+                case "0": {//[Terminar o programa]
+                    System.out.println("Serviço encerrado.");
+                    rodando = false;
+                }break;
+                default: {
+                    System.out.println("Entrada inválida, tente novamente");
+                }
+            }
+        }
+        input.close();
     }
 
 }

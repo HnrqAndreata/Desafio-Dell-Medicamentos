@@ -2,26 +2,32 @@ import java.util.*;
 
 public class Funcionalidades {
 
-    //Consulta medicamentos pelo nome e devolve todos os encontrados, exibindo Nome do produto, apresentacao e Pf sem impostos
+    //Consulta medicamentos pelo nome e imprime todos os encontrados, exibindo Nome do produto, apresentacao e Pf sem impostos
     public void consultarPeloNome(List<Medicamento> medicamentos, String nome){
-        System.out.println("Resultados para a consulta 1 ------------------------");
-
+        System.out.println("\nResultados para a consulta ------------------------");
+        int achados = 0;
         for (Medicamento m : medicamentos) { // Para cada medicamento lido
             String nomeConsulta = m.getProduto().toLowerCase();
-            String com2020 = m.getComercializacao2020().toLowerCase();
+            //String com2020 = m.getComercializacao2020().toLowerCase();
+            String com2020 = "sim";
             if (nomeConsulta.contains(nome.toLowerCase()) && com2020.contains("sim")){ // Se foi comercializado em 2020 e contem o nome informado, printa as infos
-                System.out.println("Nome do produto: "+m.getProduto());
+                achados++;
+                System.out.println("\nNome do produto: "+m.getProduto());
                 System.out.println("Apresentação: "+m.getApresentacao());
                 System.out.println("PF Sem Impostos: "+m.getPfSemImpostos());
-                System.out.println("-----------------------------------------------------");
             }
         }
+        if(achados == 0){
+            System.out.println("Nenhum produto com este nome foi encontrado.");
+        }
+        System.out.println("\n---------------------------------------------------");
+        System.out.println("Consulta completa.\n");
     }
 
     //Busca um produto pelo código de barras e imprime os registros de todos os produtos com mesmo nome
     //Tambem pega o PMC 0% de cada registro encontrado e puxa o maior, menor e a diferenca entre os dois
     public void buscarCodigoDeBarras(List<Medicamento> medicamentos, String codigoDeBarras){
-        System.out.println("Resultados para a consulta 2 ------------------------");
+        System.out.println("Resultados para a consulta ------------------------");
         double precoMaximo = 0;
         double precoMinimo = Double.MAX_VALUE;
         String produtoAlvo = "";
@@ -38,18 +44,16 @@ public class Funcionalidades {
                 Double pmc0 = Double.valueOf(m.getPmc0().replaceAll(",",".").replaceAll(" ","")); //Pegamos o valor double, trocando a virgula por ponto na string
                 System.out.println(m.getRegistro()+" - PMC 0%: "+pmc0);
                 System.out.println();
-                if (pmc0 > precoMaximo){ //Pegamos o maior PMC 0%
-                    precoMaximo = pmc0;
-                }
-                if (pmc0 < precoMinimo){ //Pegamos o menor PMC 0%
-                    precoMinimo = pmc0;
-                }
+                precoMaximo = max(precoMaximo,pmc0);
+                precoMinimo = min(precoMinimo,pmc0);
             }
         }
         //Imprime
         System.out.println("PMC mais alto: "+precoMaximo);
         System.out.println("PMC mais baixo: "+precoMinimo);
         System.out.println("Diferença entre PMCs: "+(precoMaximo-precoMinimo));
+        System.out.println("---------------------------------------------------");
+        System.out.println("Consulta completa.\n");
     }
 
     //Comparativo da LISTA DE CONCESSAO DE CRÉDITO TRIBUTARIO (PIS/COFINS)
@@ -86,16 +90,41 @@ public class Funcionalidades {
         String grafPositivas = desenhaGrafico(prctPositivas);
 
         //Imprime
+        System.out.println("\n---------------------------------------------------");
         System.out.println("CLASSIFICACAO    PERCENTUAL                 GRAFICO");
         System.out.println("Negativa         "+prctNegativas+"%"+"         "+grafNegativas);
         System.out.println("Neutra           "+prctNeutras+"%"+"        "+grafNeutras);
         System.out.println("Positiva         "+prctPositivas+"%"+"         "+grafPositivas);
         System.out.println("\nTOTAL            100%");
+        System.out.println("---------------------------------------------------");
     }
 
+    //Pega o maior entre dois valores
+    public double max(double a, double b){
+        if (a > b){
+            return a;
+        }
+        else{
+            return b;
+        }
+    }
+
+    //Pega o menor entre dois valores
+    public double min(double a, double b){
+        if (a < b){
+            return a;
+        }
+        else{
+            return b;
+        }
+    }
     public String desenhaGrafico(double size){
         String grafico = "";
-        if (size > 0 && size < 1){
+        if (size > 99){
+            return "ERRO: VALOR % INCORRETO";
+        }
+
+        else if (size > 0 && size < 1){
             grafico = grafico+"*";
         }
 
