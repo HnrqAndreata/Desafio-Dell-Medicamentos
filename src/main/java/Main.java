@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +16,6 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {//Execucao
         readStore(path);
         sistema();
-        //Funcionalidades app = new Funcionalidades();
-        //app.consultarPeloNome(medicamentos, "CHARMELIE");
-        //app.buscarCodigoDeBarras(medicamentos,"7898179363728");
-        //app.comparativoConcessao(medicamentos);
     }
     
     public static void readStore(String path)throws FileNotFoundException  { //Le o csv e guarda as colunas como objeto Medicamento
@@ -128,7 +123,6 @@ public class Main {
                     String cod;
                     System.out.print("\nDigite o código de barras: ");
                     cod = input.nextLine();
-                    System.out.println("Código de barras não encontrado, tente novamente");
                     app.buscarCodigoDeBarras(medicamentos,cod);
                 }break;
                 case "3": {//Tabela de análise da lista de concessão
