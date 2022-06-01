@@ -1,3 +1,4 @@
+import java.text.Normalizer;
 import java.util.*;
 
 public class Funcionalidades {
@@ -5,54 +6,73 @@ public class Funcionalidades {
     //Consulta medicamentos pelo nome e imprime todos os encontrados, exibindo Nome do produto, apresentacao e Pf sem impostos
     public void consultarPeloNome(List<Medicamento> medicamentos, String nome){
         System.out.println("\nResultados para a consulta ------------------------");
-        int achados = 0;
+        Boolean algumProdutoEncontrado = false;
         for (Medicamento m : medicamentos) { // Para cada medicamento lido
             String nomeConsulta = m.getProduto().toLowerCase();
-            //String com2020 = m.getComercializacao2020().toLowerCase();
-            String com2020 = "sim";
+            String com2020 = m.getComercializacao2020().toLowerCase();
             if (nomeConsulta.contains(nome.toLowerCase()) && com2020.contains("sim")){ // Se foi comercializado em 2020 e contem o nome informado, printa as infos
-                achados++;
+                algumProdutoEncontrado = true;
                 System.out.println("\nNome do produto: "+m.getProduto());
                 System.out.println("Apresentação: "+m.getApresentacao());
                 System.out.println("PF Sem Impostos: "+m.getPfSemImpostos());
             }
         }
-        if(achados == 0){
-            System.out.println("Nenhum produto com este nome foi encontrado.");
+
+        if(!algumProdutoEncontrado){
+            System.out.println("\nNenhum produto com este nome foi encontrado.");
         }
+
         System.out.println("\n---------------------------------------------------");
         System.out.println("Consulta completa.\n");
     }
 
     //Busca um produto pelo código de barras e imprime os registros de todos os produtos com mesmo nome
     //Tambem pega o PMC 0% de cada registro encontrado e puxa o maior, menor e a diferenca entre os dois
-    public void buscarCodigoDeBarras(List<Medicamento> medicamentos, String codigoDeBarras){
+    public void buscarCodigoDeBarras(List<Medicamento> medicamentos, String codigoDeBarras) {
         System.out.println("Resultados para a consulta ------------------------");
         double precoMaximo = 0;
         double precoMinimo = Double.MAX_VALUE;
         String produtoAlvo = "";
-
+        int contador = 0;
+        Boolean algumProdutoEncontrado = false;
         for (Medicamento m : medicamentos) { //Para cada medicamento lido
-            if (m.getEan1().contains(codigoDeBarras) || m.getEan2().contains(codigoDeBarras) || m.getEan3().contains(codigoDeBarras)){ //Se o codigo de barras informado esta em EAN1, EAN2 ou EAN3
+            if (m.getEan1().contains(codigoDeBarras) || m.getEan2().contains(codigoDeBarras) || m.getEan3().contains(codigoDeBarras)) { //Se o codigo de barras informado esta em EAN1, EAN2 ou EAN3
+                algumProdutoEncontrado = true;
                 produtoAlvo = m.getProduto().toLowerCase(); // Achamos o produto referente ao codigo de barras
-                System.out.println("Produto referente ao codigo informado: "+produtoAlvo);
+                System.out.println("Produto referente ao codigo informado: " + produtoAlvo);
             }
         }
-        System.out.println("Registros do produto encontrados:");
-        for (Medicamento m : medicamentos) { //Para cada medicamento lido
-            if(m.getProduto().toLowerCase().contains(produtoAlvo)){ //Se tem o nome do produto alvo
-                Double pmc0 = Double.valueOf(m.getPmc0().replaceAll(",",".").replaceAll(" ","")); //Pegamos o valor double, trocando a virgula por ponto na string
-                System.out.println(m.getRegistro()+" - PMC 0%: "+pmc0);
-                System.out.println();
-                precoMaximo = max(precoMaximo,pmc0);
-                precoMinimo = min(precoMinimo,pmc0);
+
+        if (!algumProdutoEncontrado) {
+            System.out.println("\nNenhum produto referente ao código de barras informado foi encontrado");
+        } else {
+            System.out.println("Registros do produto encontrados:\n");
+            for (Medicamento m : medicamentos) { //Para cada medicamento lido
+                if (m.getProduto().toLowerCase().contains(produtoAlvo)) { //Se tem o nome do produto alvo
+                    if (m.getPmc0().length() > 0) {
+                        contador++;
+                        Double pmc0 = Double.valueOf(m.getPmc0().replaceAll(",", ".").replaceAll(" ", "")); //Pegamos o valor double, trocando a virgula por ponto na string
+                        System.out.println(m.getRegistro() + " - PMC 0%: " + pmc0);
+                        System.out.println();
+                        precoMaximo = max(precoMaximo, pmc0);
+                        precoMinimo = min(precoMinimo, pmc0);
+                    }
+                }
+            }
+
+            //Impressao que depende de termos achado ao menos um PMC 0 não vazio para mostrar
+            if (contador < 0) {
+                System.out.println("PMC mais alto: Nenhum PMC 0% informado");
+                System.out.println("PMC mais baixo: Nenhum PMC 0% informado");
+                System.out.println("Diferença entre PMCs: Nenhum PMC 0% informad");
+            } else {
+                System.out.println("PMC mais alto: " + precoMaximo);
+                System.out.println("PMC mais baixo: " + precoMinimo);
+                System.out.println("Diferença entre PMCs: " + (precoMaximo - precoMinimo));
+
             }
         }
-        //Imprime
-        System.out.println("PMC mais alto: "+precoMaximo);
-        System.out.println("PMC mais baixo: "+precoMinimo);
-        System.out.println("Diferença entre PMCs: "+(precoMaximo-precoMinimo));
-        System.out.println("---------------------------------------------------");
+        System.out.println("\n---------------------------------------------------");
         System.out.println("Consulta completa.\n");
     }
 
@@ -120,7 +140,7 @@ public class Funcionalidades {
     }
     public String desenhaGrafico(double size){
         String grafico = "";
-        if (size > 99){
+        if (size > 99 || size < 0){
             return "ERRO: VALOR % INCORRETO";
         }
 

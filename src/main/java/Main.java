@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,16 +12,14 @@ import com.opencsv.exceptions.CsvException;
 
 public class Main {
     private static final String path = "src/main/resources/TA_PRECO_MEDICAMENTO.csv";
-    private static final Scanner input = new Scanner(System.in);
+    private static final Scanner input = new Scanner(System.in,"ISO-8859-1");
     private static final ArrayList<Medicamento> medicamentos = new ArrayList<>();
-    private static final ArrayList<String> nomesDeProdutos = new ArrayList<>();
-    private static final ArrayList<String> codigosDeBarra = new ArrayList<>();
     public static void main(String[] args) throws FileNotFoundException {//Execucao
         readStore(path);
         sistema();
         //Funcionalidades app = new Funcionalidades();
         //app.consultarPeloNome(medicamentos, "CHARMELIE");
-        //app.buscarCodigoDeBarras(medicamentos,"7897337706506");
+        //app.buscarCodigoDeBarras(medicamentos,"7898179363728");
         //app.comparativoConcessao(medicamentos);
     }
     
@@ -29,7 +29,7 @@ public class Main {
         try {
             br = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(path), "UTF-8"));
+                            new FileInputStream(path), "ISO-8859-1"));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +49,7 @@ public class Main {
             r = reader.readAll();
             for (String[] arrays : r){
                 linha = arrays;
+                String produtoSemAcento = (Normalizer.normalize(linha[8], Normalizer.Form.NFD)).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
                 m = new Medicamento(  linha[0],
                         linha[1],
                         linha[2],
@@ -57,7 +58,7 @@ public class Main {
                         linha[5],
                         linha[6],
                         linha[7],
-                        linha[8],
+                        produtoSemAcento,
                         linha[9],
                         linha[10],
                         linha[11],
@@ -91,8 +92,6 @@ public class Main {
                         linha[39]);
 
                 medicamentos.add(m);
-                nomesDeProdutos.add(linha[8]);
-                codigosDeBarra.add(linha[5]);codigosDeBarra.add(linha[6]);codigosDeBarra.add(linha[7]);
             }
 
         }catch (NumberFormatException | IOException | CsvException e) {
@@ -112,26 +111,24 @@ public class Main {
             System.out.println("[2] Buscar produtos pelo código de barras");
             System.out.println("[3] Comparativo de lista de concessão");
             System.out.println("[0] Encerrar serviço\n");
+            System.out.print("Sua entrada: ");
             escolha = input.next();
             switch (escolha) {
                 case "1": {//Consultar pelo nome do produto
                     input.nextLine();
                     String nome;
-                    System.out.println("\nInsira o nome do medicamento: ");
+                    System.out.print("\nInsira o nome do medicamento: ");
                     nome =  input.nextLine();
-                    if(!nomesDeProdutos.contains(nome.toUpperCase())) {
-                        System.out.println("O nome inserido  está incompleto ou não consta no banco de dados, tente novamente.");
-                    }
-                    app.consultarPeloNome(medicamentos,nome);
+                    System.out.println(nome);
+                    app.consultarPeloNome(medicamentos, nome);
+
                 }break;
                 case "2": {//Buscar informações do produto pelo código de barras
                     input.nextLine();
                     String cod;
-                    System.out.println("\nDigite o código de barras: ");
+                    System.out.print("\nDigite o código de barras: ");
                     cod = input.nextLine();
-                    if (!codigosDeBarra.contains(cod)){
-                        System.out.println("Código de barras não encontrado, tente novamente");
-                    }
+                    System.out.println("Código de barras não encontrado, tente novamente");
                     app.buscarCodigoDeBarras(medicamentos,cod);
                 }break;
                 case "3": {//Tabela de análise da lista de concessão
